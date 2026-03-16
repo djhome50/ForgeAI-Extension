@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import { TaskBoard, TaskCreateModal, useTaskBoard } from "."
+import { AgentModeSelector, type AgentMode } from "@/components/agent-mode"
 import type { Task } from "./TaskBoard"
 
 interface TaskBoardViewProps {
@@ -14,6 +15,7 @@ export function TaskBoardView({ onDone }: TaskBoardViewProps) {
 	})
 	const [showCreateModal, setShowCreateModal] = useState(false)
 	const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+	const [agentMode, setAgentMode] = useState<AgentMode>("autonomous")
 
 	const handleCreateTask = (data: {
 		title: string
@@ -31,14 +33,15 @@ export function TaskBoardView({ onDone }: TaskBoardViewProps) {
 
 	return (
 		<div className="flex flex-col h-full bg-vscode-sideBar-background">
-			{/* Header with back button */}
+			{/* Header with back button and agent mode */}
 			<div className="flex items-center gap-2 px-4 py-2 border-b border-vscode-panel-border">
 				<Button variant="ghost" size="sm" onClick={onDone} className="text-vscode-foreground">
 					<ArrowLeft className="size-4 mr-1" />
 					Back to Chat
 				</Button>
 				<div className="flex-1" />
-				<span className="text-xs text-vscode-descriptionForeground">
+				<AgentModeSelector value={agentMode} onChange={setAgentMode} />
+				<span className="text-xs text-vscode-descriptionForeground ml-2">
 					{overallProgress}% complete
 				</span>
 			</div>
