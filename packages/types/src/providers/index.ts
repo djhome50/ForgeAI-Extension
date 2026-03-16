@@ -3,6 +3,7 @@ export * from "./baseten.js"
 export * from "./bedrock.js"
 export * from "./deepseek.js"
 export * from "./fireworks.js"
+export * from "./forgeai.js"
 export * from "./gemini.js"
 export * from "./lite-llm.js"
 export * from "./lm-studio.js"
@@ -47,6 +48,7 @@ import { xaiDefaultModelId } from "./xai.js"
 import { vercelAiGatewayDefaultModelId } from "./vercel-ai-gateway.js"
 import { internationalZAiDefaultModelId, mainlandZAiDefaultModelId } from "./zai.js"
 import { minimaxDefaultModelId } from "./minimax.js"
+import { forgeAIDefaultModelId } from "./forgeai.js"
 
 // Import the ProviderName type from provider-settings to avoid duplication
 import type { ProviderName } from "../provider-settings.js"
@@ -111,6 +113,8 @@ export function getProviderDefaultModelId(
 			return unboundDefaultModelId
 		case "vercel-ai-gateway":
 			return vercelAiGatewayDefaultModelId
+		case "forgeai":
+			return forgeAIDefaultModelId
 		case "anthropic":
 		case "gemini-cli":
 		case "fake-ai":

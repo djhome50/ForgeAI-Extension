@@ -107,6 +107,7 @@ export const providerNames = [
 	"baseten",
 	"deepseek",
 	"fireworks",
+	"forgeai",
 	"gemini",
 	"gemini-cli",
 	"mistral",
