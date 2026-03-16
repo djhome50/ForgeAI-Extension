@@ -88,6 +88,17 @@ import {
 	handleCreateWorktreeInclude,
 	handleCheckoutBranch,
 } from "./worktree"
+import {
+	handleGetTaskBoardTasks,
+	handleCreateTaskBoardTask,
+	handleUpdateTaskBoardTaskStatus,
+	handleDeleteTaskBoardTask,
+	handleCreateTaskWorktree,
+	handleMergeTaskWorktree,
+	handleGetTaskWorktreeStatus,
+	handleResolveMergeConflicts,
+	handleAbortTaskMerge,
+} from "./taskBoardMessageHandler"
 
 export const webviewMessageHandler = async (
 	provider: ClineProvider,
@@ -3617,6 +3628,213 @@ export const webviewMessageHandler = async (
 				await provider.postMessageToWebview({ type: "worktreeResult", success: false, text: errorMessage })
 			}
 
+			break
+		}
+
+		/**
+		 * Task Board Management
+		 */
+
+		case "getTaskBoardTasks": {
+			try {
+				const { tasks, error } = await handleGetTaskBoardTasks(provider)
+				await provider.postMessageToWebview({
+					type: "taskBoardTasks",
+					tasks,
+					error,
+				})
+			} catch (error) {
+				const errorMessage = error instanceof Error ? error.message : String(error)
+				await provider.postMessageToWebview({
+					type: "taskBoardTasks",
+					tasks: [],
+					error: errorMessage,
+				})
+			}
+			break
+		}
+
+		case "createTaskBoardTask": {
+			try {
+				const { task, error } = await handleCreateTaskBoardTask(provider, {
+					title: message.taskTitle!,
+					description: message.taskDescription,
+					priority: message.taskPriority ?? "medium",
+					status: message.taskStatus,
+					agentMode: message.taskAgentMode,
+				})
+				await provider.postMessageToWebview({
+					type: "taskBoardTaskCreated",
+					task,
+					error,
+				})
+			} catch (error) {
+				const errorMessage = error instanceof Error ? error.message : String(error)
+				await provider.postMessageToWebview({
+					type: "taskBoardTaskCreated",
+					error: errorMessage,
+				})
+			}
+			break
+		}
+
+		case "updateTaskBoardTaskStatus": {
+			try {
+				const { task, error } = await handleUpdateTaskBoardTaskStatus(
+					provider,
+					message.taskId!,
+					message.taskStatus!
+				)
+				await provider.postMessageToWebview({
+					type: "taskBoardTaskUpdated",
+					task,
+					error,
+				})
+			} catch (error) {
+				const errorMessage = error instanceof Error ? error.message : String(error)
+				await provider.postMessageToWebview({
+					type: "taskBoardTaskUpdated",
+					error: errorMessage,
+				})
+			}
+			break
+		}
+
+		case "deleteTaskBoardTask": {
+			try {
+				const { success, error } = await handleDeleteTaskBoardTask(provider, message.taskId!)
+				await provider.postMessageToWebview({
+					type: "taskBoardTaskDeleted",
+					taskId: message.taskId,
+					success,
+					error,
+				})
+			} catch (error) {
+				const errorMessage = error instanceof Error ? error.message : String(error)
+				await provider.postMessageToWebview({
+					type: "taskBoardTaskDeleted",
+					taskId: message.taskId,
+					success: false,
+					error: errorMessage,
+				})
+			}
+			break
+		}
+
+		case "createTaskWorktree": {
+			try {
+				const { worktree, error } = await handleCreateTaskWorktree(
+					provider,
+					message.taskId!,
+					message.taskTitle!,
+					message.worktreeBaseBranch
+				)
+				await provider.postMessageToWebview({
+					type: "taskWorktreeCreated",
+					taskId: message.taskId,
+					worktree,
+					error,
+				})
+			} catch (error) {
+				const errorMessage = error instanceof Error ? error.message : String(error)
+				await provider.postMessageToWebview({
+					type: "taskWorktreeCreated",
+					taskId: message.taskId,
+					error: errorMessage,
+				})
+			}
+			break
+		}
+
+		case "mergeTaskWorktree": {
+			try {
+				const { result, error } = await handleMergeTaskWorktree(
+					provider,
+					message.taskId!,
+					{
+						targetBranch: message.targetBranch,
+						squash: message.squashMerge,
+						deleteAfterMerge: message.deleteAfterMerge,
+					}
+				)
+				await provider.postMessageToWebview({
+					type: "taskWorktreeMerged",
+					taskId: message.taskId,
+					result,
+					error,
+				})
+			} catch (error) {
+				const errorMessage = error instanceof Error ? error.message : String(error)
+				await provider.postMessageToWebview({
+					type: "taskWorktreeMerged",
+					taskId: message.taskId,
+					error: errorMessage,
+				})
+			}
+			break
+		}
+
+		case "getTaskWorktreeStatus": {
+			try {
+				const { status, error } = await handleGetTaskWorktreeStatus(provider, message.taskId!)
+				await provider.postMessageToWebview({
+					type: "taskWorktreeStatus",
+					taskId: message.taskId,
+					status,
+					error,
+				})
+			} catch (error) {
+				const errorMessage = error instanceof Error ? error.message : String(error)
+				await provider.postMessageToWebview({
+					type: "taskWorktreeStatus",
+					taskId: message.taskId,
+					error: errorMessage,
+				})
+			}
+			break
+		}
+
+		case "resolveMergeConflicts": {
+			try {
+				const { conflicts, autoResolved, manualRequired, error } = 
+					await handleResolveMergeConflicts(provider, message.taskId!)
+				await provider.postMessageToWebview({
+					type: "mergeResolved",
+					taskId: message.taskId,
+					conflicts,
+					autoResolved,
+					manualRequired,
+					error,
+				})
+			} catch (error) {
+				const errorMessage = error instanceof Error ? error.message : String(error)
+				await provider.postMessageToWebview({
+					type: "mergeResolved",
+					taskId: message.taskId,
+					error: errorMessage,
+				})
+			}
+			break
+		}
+
+		case "abortTaskMerge": {
+			try {
+				const { success, error } = await handleAbortTaskMerge(provider, message.taskId!)
+				await provider.postMessageToWebview({
+					type: "mergeResolved",
+					taskId: message.taskId,
+					success,
+					error,
+				})
+			} catch (error) {
+				const errorMessage = error instanceof Error ? error.message : String(error)
+				await provider.postMessageToWebview({
+					type: "mergeResolved",
+					taskId: message.taskId,
+					success: false,
+					error: errorMessage,
+				})
+			}
 			break
 		}
 

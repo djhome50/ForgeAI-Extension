@@ -104,6 +104,16 @@ export interface ExtensionMessage {
 		| "folderSelected"
 		| "skills"
 		| "fileContent"
+		// Task Board response types
+		| "taskBoardTasks"
+		| "taskBoardTaskCreated"
+		| "taskBoardTaskUpdated"
+		| "taskBoardTaskDeleted"
+		| "taskWorktreeCreated"
+		| "taskWorktreeMerged"
+		| "taskWorktreeStatus"
+		| "mergeConflictsDetected"
+		| "mergeResolved"
 	text?: string
 	/** For fileContent: { path, content, error? } */
 	fileContent?: { path: string; content: string | null; error?: string }
@@ -581,6 +591,16 @@ export interface WebviewMessage {
 		| "moveSkill"
 		| "updateSkillModes"
 		| "openSkillFile"
+		// Task Board messages
+		| "createTaskBoardTask"
+		| "updateTaskBoardTaskStatus"
+		| "deleteTaskBoardTask"
+		| "getTaskBoardTasks"
+		| "createTaskWorktree"
+		| "mergeTaskWorktree"
+		| "getTaskWorktreeStatus"
+		| "resolveMergeConflicts"
+		| "abortTaskMerge"
 	text?: string
 	taskId?: string
 	editedMessageContent?: string
@@ -687,6 +707,15 @@ export interface WebviewMessage {
 	worktreeBranch?: string
 	worktreeBaseBranch?: string
 	worktreeCreateNewBranch?: boolean
+	// Task Board properties
+	taskTitle?: string
+	taskDescription?: string
+	taskPriority?: "low" | "medium" | "high"
+	taskStatus?: "draft" | "active" | "in_progress" | "review" | "ready" | "merged"
+	taskAgentMode?: "lite" | "autonomous" | "economy" | "power" | "max"
+	targetBranch?: string
+	squashMerge?: boolean
+	deleteAfterMerge?: boolean
 	worktreeForce?: boolean
 	worktreeNewWindow?: boolean
 	worktreeIncludeContent?: string
