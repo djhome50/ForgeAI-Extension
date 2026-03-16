@@ -382,6 +382,13 @@ const basetenSchema = apiModelIdProviderModelSchema.extend({
 	basetenApiKey: z.string().optional(),
 })
 
+// ForgeAI provider schema
+const forgeaiSchema = baseProviderSettingsSchema.extend({
+	forgeaiBaseUrl: z.string().optional().default("http://localhost:8000"),
+	forgeaiApiKey: z.string().optional(),
+	forgeaiMode: z.enum(["architect", "code", "debug", "deploy", "orchestrator"]).optional().default("architect"),
+})
+
 const defaultSchema = z.object({
 	apiProvider: z.undefined(),
 })
@@ -408,6 +415,7 @@ export const providerSettingsSchemaDiscriminated = z.discriminatedUnion("apiProv
 	fakeAiSchema.merge(z.object({ apiProvider: z.literal("fake-ai") })),
 	xaiSchema.merge(z.object({ apiProvider: z.literal("xai") })),
 	basetenSchema.merge(z.object({ apiProvider: z.literal("baseten") })),
+	forgeaiSchema.merge(z.object({ apiProvider: z.literal("forgeai") })),
 	litellmSchema.merge(z.object({ apiProvider: z.literal("litellm") })),
 	sambaNovaSchema.merge(z.object({ apiProvider: z.literal("sambanova") })),
 	zaiSchema.merge(z.object({ apiProvider: z.literal("zai") })),
@@ -441,6 +449,7 @@ export const providerSettingsSchema = z.object({
 	...fakeAiSchema.shape,
 	...xaiSchema.shape,
 	...basetenSchema.shape,
+	...forgeaiSchema.shape,
 	...litellmSchema.shape,
 	...sambaNovaSchema.shape,
 	...zaiSchema.shape,

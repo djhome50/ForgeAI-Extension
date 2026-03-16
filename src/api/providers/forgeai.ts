@@ -32,9 +32,9 @@ export class ForgeAIHandler extends BaseProvider implements SingleCompletionHand
 		super()
 		this.options = options
 
-		// Extract ForgeAI-specific settings
+		// Extract ForgeAI-specific settings from ProviderSettings
 		const baseUrl = this.options.forgeaiBaseUrl || "http://localhost:8000"
-		const apiKey = this.options.apiKey
+		const apiKey = this.options.forgeaiApiKey
 
 		this.client = new ForgeAIClient({
 			baseUrl,
@@ -42,10 +42,13 @@ export class ForgeAIHandler extends BaseProvider implements SingleCompletionHand
 			timeout: 60000,
 		})
 
-		// Set default model
+		// Set model based on forgeaiMode setting or modelId
+		const mode = this.options.forgeaiMode || "architect"
+		const modelId = this.options.modelId || `forgeai-${mode}`
+
 		this.currentModel = {
-			id: this.options.modelId || forgeAIDefaultModelId,
-			info: forgeAIModels[this.options.modelId || forgeAIDefaultModelId] || forgeAIModels[forgeAIDefaultModelId],
+			id: modelId,
+			info: forgeAIModels[modelId as keyof typeof forgeAIModels] || forgeAIModels[forgeAIDefaultModelId],
 		}
 	}
 
