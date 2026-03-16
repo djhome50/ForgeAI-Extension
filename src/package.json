@@ -169,6 +169,31 @@
 				"command": "roo-cline.toggleAutoApprove",
 				"title": "%command.toggleAutoApprove.title%",
 				"category": "%configuration.title%"
+			},
+			{
+				"command": "roo-cline.tasksButtonClicked",
+				"title": "%command.tasks.title%",
+				"icon": "$(checklist)"
+			},
+			{
+				"command": "roo-cline.openTaskBoard",
+				"title": "%command.openTaskBoard.title%",
+				"category": "%configuration.title%"
+			},
+			{
+				"command": "roo-cline.openTaskBoardInTab",
+				"title": "%command.openTaskBoardInTab.title%",
+				"category": "%configuration.title%"
+			},
+			{
+				"command": "roo-cline.openTaskBoardInSidebar",
+				"title": "%command.openTaskBoardInSidebar.title%",
+				"category": "%configuration.title%"
+			},
+			{
+				"command": "roo-cline.openTaskBoardInWindow",
+				"title": "%command.openTaskBoardInWindow.title%",
+				"category": "%configuration.title%"
 			}
 		],
 		"menus": {
@@ -234,6 +259,11 @@
 					"when": "view == roo-cline.SidebarProvider"
 				},
 				{
+					"command": "roo-cline.tasksButtonClicked",
+					"group": "navigation@5",
+					"when": "view == roo-cline.SidebarProvider"
+				},
+				{
 					"command": "roo-cline.historyButtonClicked",
 					"group": "overflow@1",
 					"when": "view == roo-cline.SidebarProvider"
@@ -263,6 +293,11 @@
 				{
 					"command": "roo-cline.marketplaceButtonClicked",
 					"group": "navigation@4",
+					"when": "activeWebviewPanelId == roo-cline.TabPanelProvider"
+				},
+				{
+					"command": "roo-cline.tasksButtonClicked",
+					"group": "navigation@5",
 					"when": "activeWebviewPanelId == roo-cline.TabPanelProvider"
 				},
 				{
