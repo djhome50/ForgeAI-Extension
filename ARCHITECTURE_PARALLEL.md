@@ -143,7 +143,7 @@ const TaskBoard = () => {
 | **Autonomous** | 🚀 Medium | $$ | Standard | Normal development |
 | **Economy** | 🐢 Slow | $ | Optimized | Cost-sensitive tasks |
 | **Power** | 💪 Fast | $$$ | Advanced | Complex features |
-| **Max** | 🏎️ Fastest | $$$$ | Maximum | Production-critical |
+| **Max** | 🔄 Long-running | $$$$ | Hands-off | Extended autonomous building |
 
 ## Settings Schema Extension
 
