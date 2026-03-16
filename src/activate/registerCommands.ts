@@ -15,6 +15,8 @@ import { importSettingsWithFeedback } from "../core/config/importExport"
 import { MdmService } from "../services/mdm/MdmService"
 import { t } from "../i18n"
 
+import { getTaskBoardProvider, TaskBoardProvider } from "../services/task-board"
+
 /**
  * Helper to get the visible ClineProvider instance or log if not found.
  */
@@ -133,6 +135,30 @@ const getCommandsMap = ({ context, outputChannel, provider }: RegisterCommandOpt
 		const visibleProvider = getVisibleProviderOrLog(outputChannel)
 		if (!visibleProvider) return
 		visibleProvider.postMessageToWebview({ type: "action", action: "marketplaceButtonClicked" })
+	},
+	tasksButtonClicked: () => {
+		const visibleProvider = getVisibleProviderOrLog(outputChannel)
+		if (!visibleProvider) return
+		visibleProvider.postMessageToWebview({ type: "action", action: "tasksButtonClicked" })
+	},
+	openTaskBoard: async () => {
+		const mode = await TaskBoardProvider.showDisplayModePicker()
+		if (mode) {
+			const taskBoardProvider = getTaskBoardProvider(context)
+			await taskBoardProvider.open(mode)
+		}
+	},
+	openTaskBoardInTab: async () => {
+		const taskBoardProvider = getTaskBoardProvider(context)
+		await taskBoardProvider.open("tab")
+	},
+	openTaskBoardInSidebar: async () => {
+		const taskBoardProvider = getTaskBoardProvider(context)
+		await taskBoardProvider.open("sidebar")
+	},
+	openTaskBoardInWindow: async () => {
+		const taskBoardProvider = getTaskBoardProvider(context)
+		await taskBoardProvider.open("window")
 	},
 	newTask: handleNewTask,
 	setCustomStoragePath: async () => {
